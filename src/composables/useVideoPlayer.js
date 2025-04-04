@@ -51,6 +51,7 @@ export function useVideoPlayer(videoRef) {
       videoRef.value.pause();
       videoRef.value.controls = true;
       videoRef.value.currentTime = 0;
+      videoRef.value.muted = false;
       videoRef.value.load();
     }, 4000 - videoRef.value.currentTime * 1000);
   }
