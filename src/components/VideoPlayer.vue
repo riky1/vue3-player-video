@@ -32,7 +32,7 @@ const { state, playVideo, pauseVideo, startLoop, stopLoop } = useVideoPlayer(vid
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const videoType = useVideoType(props.src);
 
-// Funzioni handler
+// Handler functions
 const handlePlay = () => {
   if (state.isPlayingOnHover) return;
 
@@ -73,7 +73,12 @@ const handleClick = () => {
 };
 
 const handleMouseEnter = () => {
-  if (state.isPlayingOnClick || !videoRef.value) return;
+  if (!videoRef.value) return;
+
+  if (state.isPlayingOnClick) {
+    if(videoRef.value.paused) state.showPlayButton = true;
+    return;
+  } 
 
   videoRef.value.muted = true;
   videoRef.value.controls = false;
@@ -84,7 +89,12 @@ const handleMouseEnter = () => {
 };
 
 const handleMouseLeave = () => {
-  if (state.isPlayingOnClick || !videoRef.value) return;
+  if (!videoRef.value) return;
+
+  if (state.isPlayingOnClick) {
+    state.showPlayButton = false;
+    return;
+  } 
 
   stopLoop();
 };
@@ -121,11 +131,18 @@ useVideoEvents(videoRef, {
       </video>
 
       <button 
-        v-show="state.showPlayButton"
-        class="play-button" 
+        :class="['play-button play', { show: state.showPlayButton }]" 
         aria-label="Play button"
         @click.prevent="handleClick"
       ></button>
+
+      <button 
+        :class="['play-button pause' , { show: state.showPauseButton }]" 
+        aria-label="Play button"
+        @click.prevent="handleClick"
+      >
+        <div class="pause-icon"></div>
+      </button>
     </figure>
   </section>
 </template>
@@ -159,32 +176,68 @@ figure {
 }
 
 // Play Button
+
+//TODO: add animatio to play button
+
 .play-button {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;  
   width: 60px;
   height: 60px;
   background: var(--play-button-bg);
   border: none;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: background 0.3s, box-shadow 0.3s;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform-origin: center;
 
-  &::before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    margin-left: 2px;
-    border-left: 18px solid var(--play-button-arrow);
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
+  &.play {
+    &.show {
+      opacity: 1;
+    }
+    
+    &::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      margin-left: 2px;
+      border-left: 18px solid var(--play-button-arrow);
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+  }
+
+  &.pause {
+    &.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    .pause-icon {
+      width: 20px;
+      height: 30px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .pause-icon::before,
+    .pause-icon::after {
+      content: "";
+      width: 8px;
+      height: 100%;
+      background-color: var(--play-button-arrow);
+      border-radius: 2px;
+    }
   }
 }
 

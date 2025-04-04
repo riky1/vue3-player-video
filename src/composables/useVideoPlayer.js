@@ -6,8 +6,11 @@ export function useVideoPlayer(videoRef) {
     isPlayingOnHover: false,
     isMutedByUser: false,
     showPlayButton: true,
+    showPauseButton: false,
     loopInterval: null,
   });
+
+  let pauseButtonTimeout = null;
 
   const playVideo = () => {
     if (!state.isPlayingOnClick) {
@@ -23,14 +26,23 @@ export function useVideoPlayer(videoRef) {
     }
     
     state.showPlayButton = false;
+    state.showPauseButton = false;
     videoRef.value.controls = true;
     state.isPlayingOnClick = true;
     videoRef.value.play();
+
+    clearTimeout(pauseButtonTimeout);
   };
 
   const pauseVideo = () => {
-    state.showPlayButton = true;
+    state.showPauseButton = true;
     videoRef.value.pause();
+
+    clearTimeout(pauseButtonTimeout);
+
+    pauseButtonTimeout = setTimeout(() => {
+      state.showPauseButton = false;
+    }, 200);
   };
 
   const startLoop = () => {
