@@ -27,10 +27,73 @@ const props = defineProps({
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const videoType = useVideoType(props.src);
 
+const videoRef = ref(null);
+
+// Funzioni handler
+const handlePlay = () => {
+  console.log('Evento: play');
+};
+
+const handlePause = () => {
+  console.log('Evento: pause');
+};
+
+const handleEnd = () => {
+  console.log('Evento: ended');
+};
+
+const handleVolumeChange = () => {
+  const video = videoRef.value;
+  console.log('Evento: volumechange', video.muted ? 'Mute' : 'Unmute');
+};
+
+const handleClick = () => {
+  const video = videoRef.value;
+  
+  if (video.paused) {
+    console.log('Click sul video: play');
+  } else {
+    console.log('Click sul video: pause');
+  }
+};
+
+const handleMouseEnter = () => {
+  console.log('Mouse enter');
+};
+
+const handleMouseLeave = () => {
+  console.log('Mouse leave');
+};
+
+onMounted(() => {
+  const video = videoRef.value;
+
+  if (video) {
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
+    video.addEventListener('ended', handleEnd);
+    video.addEventListener('volumechange', handleVolumeChange);
+  }
+});
+
+onUnmounted(() => {
+  const video = videoRef.value;
+
+  if (video) {
+    video.removeEventListener('play', handlePlay);
+    video.removeEventListener('pause', handlePause);
+    video.removeEventListener('ended', handleEnd);
+    video.removeEventListener('volumechange', handleVolumeChange);
+  }
+});
 </script>
 
 <template>
-  <section class="video-player">
+  <section 
+    class="video-player"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
     <figure class="video-wrapper" :style="aspectRatioStyle">
       <video 
         ref="videoRef"
@@ -40,6 +103,7 @@ const videoType = useVideoType(props.src);
         playsinline
         :poster="poster" 
         :aria-label="description"
+        @click="handleClick"
       >
         <source :src="src" :type="videoType" />
         <p>
@@ -50,6 +114,7 @@ const videoType = useVideoType(props.src);
       <button 
         class="play-button" 
         aria-label="Play button"
+        @click="handleClick"
       ></button>
     </figure>
   </section>
