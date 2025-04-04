@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { useVideoEvents } from '../composables/useVideoEvents';
 import { useAspectRatio } from '../composables/useAspectRatio';
 import { useVideoType } from '../composables/useVideoType';
 import '../assets/video-player.css';
@@ -24,13 +25,13 @@ const props = defineProps({
   },
 });
 
-const aspectRatioStyle = useAspectRatio(props.aspectRatio);
-const videoType = useVideoType(props.src);
-
 const videoRef = ref(null);
 const showPlayButton = ref(true);
 const isPlayingOnClick = ref(null);
 const isPlayngOnOver = ref(null);
+
+const aspectRatioStyle = useAspectRatio(props.aspectRatio);
+const videoType = useVideoType(props.src);
 
 const playVideo = () => {
   if (!isPlayingOnClick.value) {
@@ -94,26 +95,11 @@ const handleMouseLeave = () => {
   console.log('Mouse leave');
 };
 
-onMounted(() => {
-  const video = videoRef.value;
-
-  if (video) {
-    video.addEventListener('play', handlePlay);
-    video.addEventListener('pause', handlePause);
-    video.addEventListener('ended', handleEnd);
-    video.addEventListener('volumechange', handleVolumeChange);
-  }
-});
-
-onUnmounted(() => {
-  const video = videoRef.value;
-
-  if (video) {
-    video.removeEventListener('play', handlePlay);
-    video.removeEventListener('pause', handlePause);
-    video.removeEventListener('ended', handleEnd);
-    video.removeEventListener('volumechange', handleVolumeChange);
-  }
+useVideoEvents(videoRef, {
+  play: handlePlay,
+  pause: handlePause,
+  ended: handleEnd,
+  volumechange: handleVolumeChange
 });
 </script>
 
