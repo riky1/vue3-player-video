@@ -28,14 +28,38 @@ const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const videoType = useVideoType(props.src);
 
 const videoRef = ref(null);
+const showPlayButton = ref(true);
+const isPlayingOnClick = ref(null);
+const isPlayngOnOver = ref(null);
+
+const playVideo = () => {
+  if (!isPlayingOnClick.value) {
+    videoRef.value.currentTime = 0;
+  }
+
+  //TODO: handle case where if user mutes, then pauses and then resumes, if video remains mute
+  videoRef.value.muted = false;
+  showPlayButton.value = false;
+  videoRef.value.play();
+};
+
+const pauseVideo = () => {
+  showPlayButton.value = true;
+  videoRef.value.pause();
+};
 
 // Funzioni handler
 const handlePlay = () => {
   console.log('Evento: play');
+
+  isPlayingOnClick.value = true;
+  playVideo();
 };
 
 const handlePause = () => {
   console.log('Evento: pause');
+
+  pauseVideo();
 };
 
 const handleEnd = () => {
@@ -48,12 +72,17 @@ const handleVolumeChange = () => {
 };
 
 const handleClick = () => {
-  const video = videoRef.value;
-  
-  if (video.paused) {
-    console.log('Click sul video: play');
-  } else {
+  if (!videoRef.value) return;
+
+  if (isPlayingOnClick.value && !videoRef.value.paused) {
     console.log('Click sul video: pause');
+
+    pauseVideo();
+  } else {
+    console.log('Click sul video: play');
+
+    isPlayingOnClick.value = true;
+    playVideo();
   }
 };
 
@@ -103,7 +132,7 @@ onUnmounted(() => {
         playsinline
         :poster="poster" 
         :aria-label="description"
-        @click="handleClick"
+        @click.prevent="handleClick"
       >
         <source :src="src" :type="videoType" />
         <p>
@@ -112,9 +141,10 @@ onUnmounted(() => {
       </video>
 
       <button 
+        v-show="showPlayButton"
         class="play-button" 
         aria-label="Play button"
-        @click="handleClick"
+        @click.prevent="handleClick"
       ></button>
     </figure>
   </section>
