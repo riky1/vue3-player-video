@@ -128,12 +128,15 @@ const handleMouseLeave = () => {
 
   console.log('Mouse leave');
 
-  clearInterval(loopInterval);
+  setTimeout(() => {
+    clearInterval(loopInterval);
 
-  videoRef.value.pause();
-  videoRef.value.controls = true;
-  videoRef.value.currentTime = 0;
-  videoRef.value.load();
+    videoRef.value.pause();
+    videoRef.value.controls = true;
+    videoRef.value.currentTime = 0;
+    videoRef.value.load();
+  }, 4000 - videoRef.value.currentTime * 1000);
+  
 };
 
 useVideoEvents(videoRef, {
