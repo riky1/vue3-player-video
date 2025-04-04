@@ -29,6 +29,7 @@ const videoRef = ref(null);
 const showPlayButton = ref(true);
 const isPlayingOnClick = ref(null);
 const isPlayingOnHover = ref(null);
+const isMutedByUser = ref(null);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const videoType = useVideoType(props.src);
@@ -44,9 +45,12 @@ const playVideo = () => {
 
   clearInterval(loopInterval);
 
-  //TODO: handle case where if user mutes, then pauses and then resumes, if video remains mute
-
-  videoRef.value.muted = false;
+  if (isMutedByUser.value) {
+    videoRef.value.muted = true;
+  } else {
+    videoRef.value.muted = false;
+  }
+  
   showPlayButton.value = false;
   videoRef.value.controls = true;
   isPlayingOnClick.value = true;
@@ -86,6 +90,13 @@ const handleEnd = () => {
 const handleVolumeChange = () => {
   const video = videoRef.value;
   console.log('Evento: volumechange', video.muted ? 'Mute' : 'Unmute');
+
+  if (isPlayingOnHover.value) {
+    isMutedByUser.value = false;
+    return;
+  }
+
+  isMutedByUser.value = video.muted ? true : false
 };
 
 const handleClick = () => {
