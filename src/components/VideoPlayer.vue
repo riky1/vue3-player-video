@@ -28,32 +28,45 @@ const props = defineProps({
 const videoRef = ref(null);
 const showPlayButton = ref(true);
 const isPlayingOnClick = ref(null);
-const isPlayngOnOver = ref(null);
+const isPlayingOnHover = ref(null);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const videoType = useVideoType(props.src);
 
+let loopInterval = null;
+
 const playVideo = () => {
+  console.log('=== playVideo');
+
   if (!isPlayingOnClick.value) {
     videoRef.value.currentTime = 0;
   }
 
+  clearInterval(loopInterval);
+
   //TODO: handle case where if user mutes, then pauses and then resumes, if video remains mute
+
   videoRef.value.muted = false;
   showPlayButton.value = false;
+  videoRef.value.controls = true;
+  isPlayingOnClick.value = true;
   videoRef.value.play();
 };
 
 const pauseVideo = () => {
+  console.log('pauseVideo');
+
   showPlayButton.value = true;
   videoRef.value.pause();
 };
 
 // Funzioni handler
 const handlePlay = () => {
+  if (isPlayingOnHover.value) return;
+
   console.log('Evento: play');
 
-  isPlayingOnClick.value = true;
+  isPlayingOnHover.value = false;
   playVideo();
 };
 
@@ -65,6 +78,9 @@ const handlePause = () => {
 
 const handleEnd = () => {
   console.log('Evento: ended');
+
+  videoRef.value.currentTime = 0;
+  videoRef.value.load();
 };
 
 const handleVolumeChange = () => {
@@ -82,17 +98,42 @@ const handleClick = () => {
   } else {
     console.log('Click sul video: play');
 
-    isPlayingOnClick.value = true;
+    isPlayingOnHover.value = false;
     playVideo();
   }
 };
 
 const handleMouseEnter = () => {
+  if (isPlayingOnClick.value || !videoRef.value) return;
+
   console.log('Mouse enter');
+
+  videoRef.value.muted = true;
+  videoRef.value.controls = false;
+  isPlayingOnHover.value = true;
+  videoRef.value.play();
+
+  clearInterval(loopInterval);
+
+  loopInterval = setInterval(() => {
+    if (videoRef.value && !isPlayingOnClick.value) {
+      videoRef.value.currentTime = 0;
+      videoRef.value.play();
+    }
+  }, 6000);
 };
 
 const handleMouseLeave = () => {
+  if (isPlayingOnClick.value || !videoRef.value) return;
+
   console.log('Mouse leave');
+
+  clearInterval(loopInterval);
+
+  videoRef.value.pause();
+  videoRef.value.controls = true;
+  videoRef.value.currentTime = 0;
+  videoRef.value.load();
 };
 
 useVideoEvents(videoRef, {
