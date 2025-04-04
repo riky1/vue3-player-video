@@ -5,24 +5,20 @@ import { onMounted, onUnmounted } from 'vue';
  * @param {Ref} videoRef - Il riferimento al video element
  * @param {Object} events - Un oggetto di eventi con i nomi degli eventi come chiavi e funzioni callback come valori
  */
-export function useVideoEvents(videoRef, events) {
+export function useVideoEvents(videoRef, handlers) {
   onMounted(() => {
-    const video = videoRef.value;
+    if (!videoRef.value) return;
 
-    if (video) {
-      Object.entries(events).forEach(([event, handler]) => {
-        video.addEventListener(event, handler);
-      });
-    }
+    Object.keys(handlers).forEach((event) => {
+      videoRef.value.addEventListener(event, handlers[event]);
+    });
   });
 
   onUnmounted(() => {
-    const video = videoRef.value;
-    
-    if (video) {
-      Object.entries(events).forEach(([event, handler]) => {
-        video.removeEventListener(event, handler);
-      });
-    }
+    if (!videoRef.value) return;
+
+    Object.keys(handlers).forEach((event) => {
+      videoRef.value.removeEventListener(event, handlers[event]);
+    });
   });
 }

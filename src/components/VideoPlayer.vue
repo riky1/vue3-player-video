@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { ref } from 'vue';
+import { useVideoPlayer } from '../composables/useVideoPlayer';
 import { useVideoEvents } from '../composables/useVideoEvents';
 import { useAspectRatio } from '../composables/useAspectRatio';
 import { useVideoType } from '../composables/useVideoType';
@@ -26,128 +27,66 @@ const props = defineProps({
 });
 
 const videoRef = ref(null);
-const showPlayButton = ref(true);
-const isPlayingOnClick = ref(null);
-const isPlayingOnHover = ref(null);
-const isMutedByUser = ref(null);
+const { state, playVideo, pauseVideo, startLoop, stopLoop } = useVideoPlayer(videoRef);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const videoType = useVideoType(props.src);
 
-let loopInterval = null;
-
-const playVideo = () => {
-  console.log('=== playVideo');
-
-  if (!isPlayingOnClick.value) {
-    videoRef.value.currentTime = 0;
-  }
-
-  clearInterval(loopInterval);
-
-  if (isMutedByUser.value) {
-    videoRef.value.muted = true;
-  } else {
-    videoRef.value.muted = false;
-  }
-  
-  showPlayButton.value = false;
-  videoRef.value.controls = true;
-  isPlayingOnClick.value = true;
-  videoRef.value.play();
-};
-
-const pauseVideo = () => {
-  console.log('pauseVideo');
-
-  showPlayButton.value = true;
-  videoRef.value.pause();
-};
-
 // Funzioni handler
 const handlePlay = () => {
-  if (isPlayingOnHover.value) return;
+  if (state.isPlayingOnHover) return;
 
-  console.log('Evento: play');
-
-  isPlayingOnHover.value = false;
+  state.isPlayingOnHover = false;
   playVideo();
 };
 
 const handlePause = () => {
-  console.log('Evento: pause');
-
   pauseVideo();
 };
 
 const handleEnd = () => {
-  console.log('Evento: ended');
-
   videoRef.value.currentTime = 0;
   videoRef.value.load();
+  state.isPlayingOnClick = false;
 };
 
 const handleVolumeChange = () => {
   const video = videoRef.value;
-  console.log('Evento: volumechange', video.muted ? 'Mute' : 'Unmute');
 
-  if (isPlayingOnHover.value) {
-    isMutedByUser.value = false;
+  if (state.isPlayingOnHover) {
+    state.isMutedByUser = false;
     return;
   }
 
-  isMutedByUser.value = video.muted ? true : false
+  state.isMutedByUser = video.muted ? true : false
 };
 
 const handleClick = () => {
   if (!videoRef.value) return;
 
-  if (isPlayingOnClick.value && !videoRef.value.paused) {
-    console.log('Click sul video: pause');
-
+  if (state.isPlayingOnClick && !videoRef.value.paused) {
     pauseVideo();
   } else {
-    console.log('Click sul video: play');
-
-    isPlayingOnHover.value = false;
+    state.isPlayingOnHover = false;
     playVideo();
   }
 };
 
 const handleMouseEnter = () => {
-  if (isPlayingOnClick.value || !videoRef.value) return;
-
-  console.log('Mouse enter');
+  if (state.isPlayingOnClick || !videoRef.value) return;
 
   videoRef.value.muted = true;
   videoRef.value.controls = false;
-  isPlayingOnHover.value = true;
+  state.isPlayingOnHover = true;
   videoRef.value.play();
 
-  clearInterval(loopInterval);
-
-  loopInterval = setInterval(() => {
-    if (videoRef.value && !isPlayingOnClick.value) {
-      videoRef.value.currentTime = 0;
-      videoRef.value.play();
-    }
-  }, 6000);
+  startLoop();
 };
 
 const handleMouseLeave = () => {
-  if (isPlayingOnClick.value || !videoRef.value) return;
+  if (state.isPlayingOnClick || !videoRef.value) return;
 
-  console.log('Mouse leave');
-
-  setTimeout(() => {
-    clearInterval(loopInterval);
-
-    videoRef.value.pause();
-    videoRef.value.controls = true;
-    videoRef.value.currentTime = 0;
-    videoRef.value.load();
-  }, 4000 - videoRef.value.currentTime * 1000);
-  
+  stopLoop();
 };
 
 useVideoEvents(videoRef, {
@@ -182,7 +121,7 @@ useVideoEvents(videoRef, {
       </video>
 
       <button 
-        v-show="showPlayButton"
+        v-show="state.showPlayButton"
         class="play-button" 
         aria-label="Play button"
         @click.prevent="handleClick"
