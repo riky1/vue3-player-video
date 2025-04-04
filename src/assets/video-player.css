@@ -1,0 +1,5 @@
+:root {
+  --play-button-bg: rgba(0, 0, 0, 0.7);
+  --play-button-arrow: white;
+  --play-button-bg-hover: rgba(0, 0, 0, 0.9);
+}
