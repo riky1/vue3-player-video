@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { useAspectRatio } from '../composables/useAspectRatio';
+import { useVideoType } from '../composables/useVideoType';
 import '../assets/video-player.css';
 
 const props = defineProps({
@@ -22,34 +24,16 @@ const props = defineProps({
   },
 });
 
-// Proprietà calcolata per calcolare il padding-bottom in base all'aspect ratio.
-const aspectRatioStyle = computed(() => {
-  const [width, height] = props.aspectRatio.split('/').map(Number);
-  const percentage = (height / width) * 100;
+const aspectRatioStyle = useAspectRatio(props.aspectRatio);
+const videoType = useVideoType(props.src);
 
-  return {
-    paddingBottom: `${percentage}%`
-  };
-});
-
-// Proprietà calcolata per determinare il tipo MIME del video.
-const videoType = computed(() => {
-  const extension = props.src.split('.').pop();
-
-  const mimeTypes = {
-    mp4: 'video/mp4',
-    webm: 'video/webm',
-    ogg: 'video/ogg'
-  };
-
-  return mimeTypes[extension] || 'video/mp4';
-});
 </script>
 
 <template>
   <section class="video-player">
     <figure class="video-wrapper" :style="aspectRatioStyle">
       <video 
+        ref="videoRef"
         class="video" 
         controls 
         preload="auto" 
@@ -62,6 +46,11 @@ const videoType = computed(() => {
           Your browser doesn't support this video. Here is a <a :href="src">link to the video</a> instead.
         </p>
       </video>
+
+      <button 
+        class="play-button" 
+        aria-label="Play button"
+      ></button>
     </figure>
   </section>
 </template>
