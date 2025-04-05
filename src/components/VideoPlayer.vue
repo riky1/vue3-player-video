@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useVideoPlayer } from '../composables/useVideoPlayer';
 import { useVideoEvents } from '../composables/useVideoEvents';
+import { useButtonsHandler } from '../composables/useButtonsHandler';
 import { useAspectRatio } from '../composables/useAspectRatio';
 import { useVideoType } from '../composables/useVideoType';
 import '../assets/video-player.css';
@@ -28,19 +29,30 @@ const props = defineProps({
 
 const videoRef = ref(null);
 const { state, playVideo, pauseVideo, startLoop, stopLoop } = useVideoPlayer(videoRef);
+const { btnState, btnPlayVideo, btnPauseVideo } = useButtonsHandler();
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const videoType = useVideoType(props.src);
 
 // Handler functions
+
+//TODO: handle scrubber
+// problema: quando viene trascinato si vedono le icone play e pause
+// Eventi:
+// seeking:	Appena l'utente inizia a cercare (scrub)
+// seeked:	Quando ha finito di cercare (rilascia scrub)
+// timeupdate: Durante la riproduzione (o anche durante lo scrub, a seconda del browser)
+
 const handlePlay = () => {
   if (state.isPlayingOnHover) return;
 
   playVideo();
+  btnPlayVideo();
 };
 
 const handlePause = () => {
   pauseVideo();
+  btnPauseVideo();
 };
 
 const handleEnd = () => {
@@ -60,8 +72,10 @@ const handleClick = () => {
 
   if (state.isPlayingOnClick && !videoRef.value.paused) {
     pauseVideo();
+    btnPauseVideo();
   } else {
     playVideo();
+    btnPlayVideo();
   }
 };
 
@@ -69,9 +83,9 @@ const handleMouseEnter = () => {
   if (!videoRef.value) return;
 
   if (state.isPlayingOnClick) {
-    if (videoRef.value.paused) {
-      state.showPlayButton = true;
-    } 
+    // if (videoRef.value.paused) {
+    //   btnState.showPlayButton = true;
+    // } 
 
     return;
   } 
@@ -88,7 +102,7 @@ const handleMouseLeave = () => {
   if (!videoRef.value) return;
 
   if (state.isPlayingOnClick) {
-    state.showPlayButton = false;
+    // btnState.showPlayButton = false;
     return;
   } 
 
@@ -128,8 +142,8 @@ useVideoEvents(videoRef, {
 
       <button 
         :class="['play-button play',
-          { show: state.showPlayButton },
-          { animate: state.animatePlayButton }
+          { show: btnState.showPlayButton },
+          { animate: btnState.animatePlayButton }
         ]" 
         aria-label="Play button"
         @click.prevent="handleClick"
@@ -137,8 +151,8 @@ useVideoEvents(videoRef, {
 
       <button 
         :class="['play-button pause',
-          { show: state.showPauseButton },
-          { animate: state.animatePauseButton }
+          { show: btnState.showPauseButton },
+          { animate: btnState.animatePauseButton }
         ]" 
         aria-label="Play button"
         @click.prevent="handleClick"
