@@ -6,10 +6,13 @@ export function useVideoPlayer(videoRef) {
     isPlayingOnHover: false,
     isMutedByUser: false,
     showPlayButton: true,
+    animatePlayButton: false,
     showPauseButton: false,
+    animatePauseButton: false,
     loopInterval: null,
   });
 
+  let playButtonTimeout = null;
   let pauseButtonTimeout = null;
 
   const playVideo = () => {
@@ -25,22 +28,36 @@ export function useVideoPlayer(videoRef) {
       videoRef.value.muted = false;
     }
     
-    state.showPlayButton = false;
+    state.showPlayButton = true;
+    state.animatePlayButton = true;
     state.showPauseButton = false;
+    state.animatePauseButton = false;
+
     videoRef.value.controls = true;
     state.isPlayingOnClick = true;
+    state.isPlayingOnHover = false;
+    
     videoRef.value.play();
 
-    clearTimeout(pauseButtonTimeout);
+    clearTimeout(playButtonTimeout);
+
+    playButtonTimeout = setTimeout(() => {
+      state.animatePlayButton = false;
+      state.showPlayButton = false;
+    }, 200);
   };
 
   const pauseVideo = () => {
+    state.animatePauseButton = true;
     state.showPauseButton = true;
+    state.animatePlayButton = false;
+
     videoRef.value.pause();
 
     clearTimeout(pauseButtonTimeout);
 
     pauseButtonTimeout = setTimeout(() => {
+      state.animatePauseButton = false;
       state.showPauseButton = false;
     }, 200);
   };
@@ -48,11 +65,9 @@ export function useVideoPlayer(videoRef) {
   const startLoop = () => {
     clearInterval(state.loopInterval);
 
-    state.loopInterval = setInterval(() => {
-      if (videoRef.value && !state.isPlayingOnClick) {
-        videoRef.value.currentTime = 0;
-        videoRef.value.play();
-      }
+    state.loopInterval = setInterval(() => {      
+      videoRef.value.currentTime = 0;
+      videoRef.value.play();
     }, 6000);
   }
 

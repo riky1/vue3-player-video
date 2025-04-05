@@ -36,7 +36,6 @@ const videoType = useVideoType(props.src);
 const handlePlay = () => {
   if (state.isPlayingOnHover) return;
 
-  state.isPlayingOnHover = false;
   playVideo();
 };
 
@@ -51,14 +50,9 @@ const handleEnd = () => {
 };
 
 const handleVolumeChange = () => {
-  const video = videoRef.value;
+  if (!state.isPlayingOnClick) return;
 
-  if (state.isPlayingOnHover) {
-    state.isMutedByUser = false;
-    return;
-  }
-
-  state.isMutedByUser = video.muted ? true : false
+  state.isMutedByUser = videoRef.value.muted ? true : false
 };
 
 const handleClick = () => {
@@ -67,7 +61,6 @@ const handleClick = () => {
   if (state.isPlayingOnClick && !videoRef.value.paused) {
     pauseVideo();
   } else {
-    state.isPlayingOnHover = false;
     playVideo();
   }
 };
@@ -76,7 +69,10 @@ const handleMouseEnter = () => {
   if (!videoRef.value) return;
 
   if (state.isPlayingOnClick) {
-    if(videoRef.value.paused) state.showPlayButton = true;
+    if (videoRef.value.paused) {
+      state.showPlayButton = true;
+    } 
+
     return;
   } 
 
@@ -131,13 +127,19 @@ useVideoEvents(videoRef, {
       </video>
 
       <button 
-        :class="['play-button play', { show: state.showPlayButton }]" 
+        :class="['play-button play',
+          { show: state.showPlayButton },
+          { animate: state.animatePlayButton }
+        ]" 
         aria-label="Play button"
         @click.prevent="handleClick"
       ></button>
 
       <button 
-        :class="['play-button pause' , { show: state.showPauseButton }]" 
+        :class="['play-button pause',
+          { show: state.showPauseButton },
+          { animate: state.animatePauseButton }
+        ]" 
         aria-label="Play button"
         @click.prevent="handleClick"
       >
@@ -177,8 +179,6 @@ figure {
 
 // Play Button
 
-//TODO: add animatio to play button
-
 .play-button {
   position: absolute;
   display: flex;
@@ -199,11 +199,15 @@ figure {
   transition: opacity 0.3s ease, transform 0.3s ease;
   transform-origin: center;
 
-  &.play {
-    &.show {
-      opacity: 1;
-    }
-    
+  &.show {
+    opacity: 1;      
+  }
+
+  &.animate {
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+
+  &.play { 
     &::before {
       content: '';
       display: block;
@@ -217,11 +221,6 @@ figure {
   }
 
   &.pause {
-    &.show {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.3);
-    }
-
     .pause-icon {
       width: 20px;
       height: 30px;
