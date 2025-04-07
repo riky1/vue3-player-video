@@ -55,10 +55,13 @@ const handlePause = () => {
   btnPauseVideo();
 };
 
+//TODO: quando finisce il video e torna all'inizio il pulsante play non si vede
+
 const handleEnd = () => {
   videoRef.value.currentTime = 0;
   videoRef.value.load();
   state.isPlayingOnClick = false;
+  btnState.showPlayButton = true;
 };
 
 const handleVolumeChange = () => {
@@ -109,11 +112,23 @@ const handleMouseLeave = () => {
   stopLoop();
 };
 
+const handleSeeking = () => {
+  btnState.showPlayButton = false;
+  btnState.showPauseButton = false;
+}
+
+const handleSeeked = () => {
+  btnState.showPlayButton = false;
+  btnState.showPauseButton = false;
+}
+
 useVideoEvents(videoRef, {
   play: handlePlay,
   pause: handlePause,
   ended: handleEnd,
-  volumechange: handleVolumeChange
+  volumechange: handleVolumeChange,
+  seeking: handleSeeking,
+  seeked: handleSeeked
 });
 </script>
 
