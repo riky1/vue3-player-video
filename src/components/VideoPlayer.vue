@@ -4,7 +4,7 @@ import { useVideoPlayer } from '../composables/useVideoPlayer';
 import { useVideoEvents } from '../composables/useVideoEvents';
 import { useButtonsHandler } from '../composables/useButtonsHandler';
 import { useAspectRatio } from '../composables/useAspectRatio';
-import { useVideoType } from '../composables/useVideoType';
+import { useMimeTypes } from '../composables/useMimeTypes';
 import '../assets/video-player.css';
 
 const props = defineProps({
@@ -32,32 +32,39 @@ const { state, playVideo, pauseVideo, startLoop, stopLoop } = useVideoPlayer(vid
 const { btnState, btnPlayVideo, btnPauseVideo } = useButtonsHandler();
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
-const videoType = useVideoType(props.src);
+const mimeType = useMimeTypes(props.src);
 
 // Handler functions
 
-//TODO: handle scrubber
-// problema: quando viene trascinato si vedono le icone play e pause
 // Eventi:
-// seeking:	Appena l'utente inizia a cercare (scrub)
-// seeked:	Quando ha finito di cercare (rilascia scrub)
-// timeupdate: Durante la riproduzione (o anche durante lo scrub, a seconda del browser)
+// play:          La riproduzione è iniziata
+// playing:       La riproduzione è pronta per iniziare dopo essere stata messa in pausa o ritardata a causa della mancanza di dati
+// pause:         La riproduzione è stata messa in pausa
+// ended:         La riproduzione si è interrotta perché raggiunta la fine del contenuto
+// seeking:	      Iniziata un'operazione di ricerca (scrubber)
+// seeked:	      Operazione di ricerca completata (rilascia scrubber)
+// timeupdate:    Durante la riproduzione (o anche durante lo scrubber, a seconda del browser)
+// volumechange:  Il volume è cambiato
 
 const handlePlay = () => {
   if (state.isPlayingOnHover) return;
+
+  console.log('handlePlay');
 
   playVideo();
   btnPlayVideo();
 };
 
 const handlePause = () => {
+  console.log('handlePause');
+
   pauseVideo();
   btnPauseVideo();
 };
 
-//TODO: quando finisce il video e torna all'inizio il pulsante play non si vede
-
 const handleEnd = () => {
+  console.log('handleEnd');
+
   videoRef.value.currentTime = 0;
   videoRef.value.load();
   state.isPlayingOnClick = false;
@@ -66,12 +73,15 @@ const handleEnd = () => {
 
 const handleVolumeChange = () => {
   if (!state.isPlayingOnClick) return;
+  console.log('handleVolumeChange');
 
   state.isMutedByUser = videoRef.value.muted ? true : false
 };
 
 const handleClick = () => {
   if (!videoRef.value) return;
+
+  console.log('handleClick');
 
   if (state.isPlayingOnClick && !videoRef.value.paused) {
     pauseVideo();
@@ -84,6 +94,8 @@ const handleClick = () => {
 
 const handleMouseEnter = () => {
   if (!videoRef.value) return;
+
+  console.log('handleMouseEnter');
 
   if (state.isPlayingOnClick) {
     // if (videoRef.value.paused) {
@@ -104,6 +116,8 @@ const handleMouseEnter = () => {
 const handleMouseLeave = () => {
   if (!videoRef.value) return;
 
+  console.log('handleMouseLeave');
+
   if (state.isPlayingOnClick) {
     // btnState.showPlayButton = false;
     return;
@@ -113,11 +127,15 @@ const handleMouseLeave = () => {
 };
 
 const handleSeeking = () => {
+  console.log('handleSeeking');
+
   btnState.showPlayButton = false;
   btnState.showPauseButton = false;
 }
 
 const handleSeeked = () => {
+  console.log('handleSeeked');
+
   btnState.showPlayButton = false;
   btnState.showPauseButton = false;
 }
@@ -149,7 +167,7 @@ useVideoEvents(videoRef, {
         :aria-label="description"
         @click.prevent="handleClick"
       >
-        <source :src="src" :type="videoType" />
+        <source :src="src" :type="mimeType" />
         <p>
           Your browser doesn't support this video. Here is a <a :href="src">link to the video</a> instead.
         </p>
