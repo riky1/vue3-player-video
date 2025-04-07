@@ -7,12 +7,14 @@ export function useVideoPlayer(videoRef) {
     isMutedByUser: false,
   });
 
+  let loopInterval = null;  
+
   const playVideo = () => {
     if (!state.isPlayingOnClick) {
       videoRef.value.currentTime = 0;
     }
   
-    clearInterval(state.loopInterval);
+    clearInterval(loopInterval);
   
     if (state.isMutedByUser) {
       videoRef.value.muted = true;
@@ -32,9 +34,9 @@ export function useVideoPlayer(videoRef) {
   };
 
   const startLoop = () => {
-    clearInterval(state.loopInterval);
+    clearInterval(loopInterval);
 
-    state.loopInterval = setInterval(() => {      
+    loopInterval = setInterval(() => {      
       videoRef.value.currentTime = 0;
       videoRef.value.play();
     }, 6000);
@@ -42,7 +44,7 @@ export function useVideoPlayer(videoRef) {
 
   const stopLoop = () => {
     setTimeout(() => {
-      clearInterval(state.loopInterval);
+      clearInterval(loopInterval);
   
       videoRef.value.pause();
       videoRef.value.controls = true;

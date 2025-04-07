@@ -10,12 +10,18 @@ function getFileExtension(src) {
 export function useMimeTypes(src) {
   return computed(() => {
     const mimeTypesList = {
-      opus: 'video/ogg',
-      ogv: 'video/ogg',
       mp4: 'video/mp4',
-      mov: 'video/mp4',
       m4v: 'video/mp4',
+      mov: 'video/quicktime',
+      webm: 'video/webm',
+      ogg: 'video/ogg',
+      ogv: 'video/ogg',
       mkv: 'video/x-matroska',
+      avi: 'video/x-msvideo',
+      flv: 'video/x-flv',
+      wmv: 'video/x-ms-wmv',
+      mpeg: 'video/mpeg',
+      mpg: 'video/mpeg'
     };
 
     const extension = getFileExtension(src);

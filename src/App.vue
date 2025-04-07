@@ -1,19 +1,24 @@
 <script setup>
+import { inject } from 'vue';
 import VideoPlayer from './components/VideoPlayer.vue';
 
+const data = inject('data');
+const jsonFile = inject('jsonFile');
+const lang = inject('lang');
+
+console.log('data: ', data);
+console.log('jsonFile: ', jsonFile);
+console.log('lang: ', lang);
 </script>
 
 <template>
   <main>
-    <div class="video-wrapper">
-      <VideoPlayer src="https://files.vidstack.io/sprite-fight/720p.mp4"
-        poster="https://files.vidstack.io/sprite-fight/poster.webp" description="Video Poster" aspectRatio="9/16"
-      />
-    </div>
-
-    <div class="video-wrapper">
-      <VideoPlayer src="https://files.vidstack.io/agent-327/720p.mp4"
-        poster="https://files.vidstack.io/agent-327/poster.png" description="Video Poster" aspectRatio="9/16"
+    <div v-for="item in data" :key="item.id" class="video-wrapper">
+      <VideoPlayer 
+        :sources="item.sources"
+        :poster="item.poster" 
+        :description="item.posterAlt" 
+        :aspectRatio="item.aspectRatio"
       />
     </div>
   </main>

@@ -8,8 +8,8 @@ import { useMimeTypes } from '../composables/useMimeTypes';
 import '../assets/video-player.css';
 
 const props = defineProps({
-  src: {
-    type: String,
+  sources: {
+    type: Array,
     required: true
   },
   poster: {
@@ -167,9 +167,9 @@ useVideoEvents(videoRef, {
         :aria-label="description"
         @click.prevent="handleClick"
       >
-        <source :src="src" :type="mimeType" />
+        <source v-for="src in sources" :key="src" :src="src" :type="mimeType" />
         <p>
-          Your browser doesn't support this video. Here is a <a :href="src">link to the video</a> instead.
+          Your browser doesn't support this video. Consider updating to a new version.
         </p>
       </video>
 
