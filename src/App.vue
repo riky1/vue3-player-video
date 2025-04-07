@@ -1,26 +1,33 @@
 <script setup>
-import { inject } from 'vue';
+import { onMounted } from 'vue';
+import { useFetchData } from './composables/useFetchData';
 import VideoPlayer from './components/VideoPlayer.vue';
 
-const data = inject('data');
-const jsonFile = inject('jsonFile');
-const lang = inject('lang');
+const { config, loading, error, loadConfig } = useFetchData();
 
-console.log('data: ', data);
-console.log('jsonFile: ', jsonFile);
-console.log('lang: ', lang);
+onMounted(() => {
+  loadConfig();
+});
+
+// console.log('data: ', data);
+// console.log('jsonFile: ', jsonFile);
+// console.log('lang: ', lang);
 </script>
 
 <template>
   <main>
-    <div v-for="item in data" :key="item.id" class="video-wrapper">
-      <VideoPlayer 
-        :sources="item.sources"
-        :poster="item.poster" 
-        :description="item.posterAlt" 
-        :aspectRatio="item.aspectRatio"
-      />
-    </div>
+    <div v-if="loading">Loading…</div>
+    <div v-else-if="error">Error: {{ error.message }}</div>
+    <template v-else>
+      <div v-for="(video, index) in config.videos" :key="index" class="video-wrapper">
+        <VideoPlayer 
+          :sources="video.sources"
+          :poster="video.poster" 
+          :description="video.posterAlt" 
+          :aspectRatio="video.aspectRatio"
+        />
+      </div>
+    </template>
   </main>
 </template>
 
