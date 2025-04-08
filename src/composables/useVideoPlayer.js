@@ -33,6 +33,25 @@ export function useVideoPlayer(videoRef) {
     videoRef.value.pause();
   };
 
+  const endVideo = () => {
+    videoRef.value.currentTime = 0;
+    videoRef.value.load();
+    state.isPlayingOnClick = false;
+  };
+
+  const mouseEnterVideo = () => {
+    videoRef.value.muted = true;
+    videoRef.value.controls = false;
+    state.isPlayingOnHover = true;
+
+    videoRef.value.play();
+    startLoop();
+  }
+
+  const mouseLiveVideo = () => {
+    stopLoop();
+  }
+
   const startLoop = () => {
     clearInterval(loopInterval);
 
@@ -58,7 +77,8 @@ export function useVideoPlayer(videoRef) {
     state,
     playVideo,
     pauseVideo,
-    startLoop,
-    stopLoop
+    endVideo,
+    mouseEnterVideo,
+    mouseLiveVideo
   };
 }

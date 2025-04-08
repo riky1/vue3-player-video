@@ -28,7 +28,7 @@ const props = defineProps({
 });
 
 const videoRef = ref(null);
-const { state, playVideo, pauseVideo, startLoop, stopLoop } = useVideoPlayer(videoRef);
+const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLiveVideo } = useVideoPlayer(videoRef);
 const { btnState, btnPlayVideo, btnPauseVideo } = useButtonsHandler();
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
@@ -65,9 +65,7 @@ const handlePause = () => {
 const handleEnd = () => {
   console.log('handleEnd');
 
-  videoRef.value.currentTime = 0;
-  videoRef.value.load();
-  state.isPlayingOnClick = false;
+  endVideo();
   btnState.showPlayButton = true;
 };
 
@@ -105,12 +103,7 @@ const handleMouseEnter = () => {
     return;
   } 
 
-  videoRef.value.muted = true;
-  videoRef.value.controls = false;
-  state.isPlayingOnHover = true;
-  videoRef.value.play();
-
-  startLoop();
+  mouseEnterVideo();
 };
 
 const handleMouseLeave = () => {
@@ -123,21 +116,21 @@ const handleMouseLeave = () => {
     return;
   } 
 
-  stopLoop();
+  mouseLiveVideo();
 };
 
 const handleSeeking = () => {
   console.log('handleSeeking');
 
-  btnState.showPlayButton = false;
-  btnState.showPauseButton = false;
+  // btnState.showPlayButton = false;
+  // btnState.showPauseButton = false;
 }
 
 const handleSeeked = () => {
   console.log('handleSeeked');
 
-  btnState.showPlayButton = false;
-  btnState.showPauseButton = false;
+  // btnState.showPlayButton = false;
+  // btnState.showPauseButton = false;
 }
 
 useVideoEvents(videoRef, {
