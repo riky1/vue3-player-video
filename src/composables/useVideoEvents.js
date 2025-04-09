@@ -1,24 +1,38 @@
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue'
 
 /**
- * Composable per la gestione degli eventi video
- * @param {Ref} videoRef - Il riferimento al video element
- * @param {Object} events - Un oggetto di eventi con i nomi degli eventi come chiavi e funzioni callback come valori
+ * Composable for Video Event Management
+ * @param {Ref} videoRef - The reference to the video element
+ * @param {Object} events - An event object with event names as keys and callback functions as values
+ * @param {Function} [callback] - A function that runs for every event, receives (eventName, eventObject)
  */
-export function useVideoEvents(videoRef, events) {
-  onMounted(() => {
-    if (!videoRef.value) return;
+export function useVideoEvents(videoRef, events, callback) {
+  const listeners = {}
 
-    Object.keys(events).forEach((event) => {
-      videoRef.value.addEventListener(event, events[event]);
-    });
-  });
+  onMounted(() => {
+    if (!videoRef.value) return
+
+    Object.keys(events).forEach((eventName) => {
+      // create a wrapper function
+      const wrappedHandler = (event) => {
+        events[eventName](event) // call the specific callback
+        
+        if (typeof callback === 'function') {
+          callback(eventName, event) // call the generic one
+        }
+      }
+
+      // save the reference to remove it later
+      listeners[eventName] = wrappedHandler
+      videoRef.value.addEventListener(eventName, wrappedHandler)
+    })
+  })
 
   onUnmounted(() => {
-    if (!videoRef.value) return;
+    if (!videoRef.value) return
 
-    Object.keys(events).forEach((event) => {
-      videoRef.value.removeEventListener(event, events[event]);
-    });
-  });
+    Object.keys(listeners).forEach((eventName) => {
+      videoRef.value.removeEventListener(eventName, listeners[eventName])
+    })
+  })
 }

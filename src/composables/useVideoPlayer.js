@@ -5,6 +5,7 @@ export function useVideoPlayer(videoRef) {
     isPlayingOnClick: false,
     isPlayingOnHover: false,
     isMutedByUser: false,
+    isFirstClick: true
   });
 
   let loopInterval = null;  
@@ -37,6 +38,7 @@ export function useVideoPlayer(videoRef) {
     videoRef.value.currentTime = 0;
     videoRef.value.load();
     state.isPlayingOnClick = false;
+    state.isFirstClick = true;
   };
 
   const mouseEnterVideo = () => {

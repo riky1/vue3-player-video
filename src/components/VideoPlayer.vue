@@ -29,7 +29,7 @@ const props = defineProps({
 
 const videoRef = ref(null);
 const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLiveVideo } = useVideoPlayer(videoRef);
-const { btnState, btnPlayVideo, btnPauseVideo } = useButtonsHandler();
+const { btnState, handleButtons } = useButtonsHandler(videoRef, state);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const mimeType = useMimeTypes(props.src);
@@ -48,25 +48,21 @@ const mimeType = useMimeTypes(props.src);
 
 const handlePlay = () => {
   if (state.isPlayingOnHover) return;
-
   console.log('handlePlay');
 
   playVideo();
-  btnPlayVideo();
 };
 
 const handlePause = () => {
   console.log('handlePause');
 
   pauseVideo();
-  btnPauseVideo();
 };
 
 const handleEnd = () => {
   console.log('handleEnd');
 
   endVideo();
-  btnState.showPlayButton = true;
 };
 
 const handleVolumeChange = () => {
@@ -78,59 +74,37 @@ const handleVolumeChange = () => {
 
 const handleClick = () => {
   if (!videoRef.value) return;
-
   console.log('handleClick');
 
   if (state.isPlayingOnClick && !videoRef.value.paused) {
     pauseVideo();
-    btnPauseVideo();
   } else {
     playVideo();
-    btnPlayVideo();
   }
 };
 
 const handleMouseEnter = () => {
   if (!videoRef.value) return;
-
+  if (state.isPlayingOnClick) return;
   console.log('handleMouseEnter');
-
-  if (state.isPlayingOnClick) {
-    // if (videoRef.value.paused) {
-    //   btnState.showPlayButton = true;
-    // } 
-
-    return;
-  } 
 
   mouseEnterVideo();
 };
 
 const handleMouseLeave = () => {
   if (!videoRef.value) return;
-
+  if (state.isPlayingOnClick) return;  
   console.log('handleMouseLeave');
-
-  if (state.isPlayingOnClick) {
-    // btnState.showPlayButton = false;
-    return;
-  } 
 
   mouseLiveVideo();
 };
 
 const handleSeeking = () => {
   console.log('handleSeeking');
-
-  // btnState.showPlayButton = false;
-  // btnState.showPauseButton = false;
 }
 
 const handleSeeked = () => {
   console.log('handleSeeked');
-
-  // btnState.showPlayButton = false;
-  // btnState.showPauseButton = false;
 }
 
 useVideoEvents(videoRef, {
@@ -140,7 +114,11 @@ useVideoEvents(videoRef, {
   volumechange: handleVolumeChange,
   seeking: handleSeeking,
   seeked: handleSeeked
-});
+},
+  (eventName) => {
+    handleButtons(eventName); // run at every event
+  }
+);
 </script>
 
 <template>
@@ -197,6 +175,7 @@ figure {
 }
 
 // VideoPlayer
+
 .video-player {
   position: relative;
   width: 100%;
