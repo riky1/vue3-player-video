@@ -10,18 +10,27 @@ export function useVideoPlayer(videoRef) {
 
   let loopInterval = null;  
 
+  // Helper per resettare il video
+  const resetVideo = (reload = true) => {
+    videoRef.value.currentTime = 0;
+    if (reload) videoRef.value.load();
+  };
+
+  // Helper per gestire il mute
+  const setMute = (muted) => {
+    videoRef.value.muted = muted;
+  };
+
   const playVideo = () => {
+    if (state.isPlayingOnHover) return;
+
     if (!state.isPlayingOnClick) {
-      videoRef.value.currentTime = 0;
+      resetVideo(false);
     }
   
     clearInterval(loopInterval);
   
-    if (state.isMutedByUser) {
-      videoRef.value.muted = true;
-    } else {
-      videoRef.value.muted = false;
-    }
+    setMute(state.isMutedByUser);
     
     videoRef.value.controls = true;
     state.isPlayingOnClick = true;
@@ -35,14 +44,16 @@ export function useVideoPlayer(videoRef) {
   };
 
   const endVideo = () => {
-    videoRef.value.currentTime = 0;
-    videoRef.value.load();
+    resetVideo();
+
     state.isPlayingOnClick = false;
     state.isFirstClick = true;
   };
 
   const mouseEnterVideo = () => {
-    videoRef.value.muted = true;
+    if (!videoRef.value || state.isPlayingOnClick) return;
+    
+    setMute(true);
     videoRef.value.controls = false;
     state.isPlayingOnHover = true;
 
@@ -50,7 +61,9 @@ export function useVideoPlayer(videoRef) {
     startLoop();
   }
 
-  const mouseLiveVideo = () => {
+  const mouseLeaveVideo = () => {
+    if (!videoRef.value || state.isPlayingOnClick) return;
+    
     stopLoop();
   }
 
@@ -58,7 +71,7 @@ export function useVideoPlayer(videoRef) {
     clearInterval(loopInterval);
 
     loopInterval = setInterval(() => {      
-      videoRef.value.currentTime = 0;
+      resetVideo(false);
       videoRef.value.play();
     }, 6000);
   }
@@ -69,9 +82,8 @@ export function useVideoPlayer(videoRef) {
   
       videoRef.value.pause();
       videoRef.value.controls = true;
-      videoRef.value.currentTime = 0;
-      videoRef.value.muted = false;
-      videoRef.value.load();
+      resetVideo();
+      setMute(false);
     }, 4000 - videoRef.value.currentTime * 1000);
   }
 
@@ -81,6 +93,6 @@ export function useVideoPlayer(videoRef) {
     pauseVideo,
     endVideo,
     mouseEnterVideo,
-    mouseLiveVideo
+    mouseLeaveVideo
   };
 }

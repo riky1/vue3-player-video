@@ -28,7 +28,7 @@ const props = defineProps({
 });
 
 const videoRef = ref(null);
-const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLiveVideo } = useVideoPlayer(videoRef);
+const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLeaveVideo } = useVideoPlayer(videoRef);
 const { btnState, handleButtons } = useButtonsHandler(videoRef, state);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
@@ -46,32 +46,6 @@ const mimeType = useMimeTypes(props.src);
 // timeupdate:    Durante la riproduzione (o anche durante lo scrubber, a seconda del browser)
 // volumechange:  Il volume è cambiato
 
-const handlePlay = () => {
-  if (state.isPlayingOnHover) return;
-  console.log('handlePlay');
-
-  playVideo();
-};
-
-const handlePause = () => {
-  console.log('handlePause');
-
-  pauseVideo();
-};
-
-const handleEnd = () => {
-  console.log('handleEnd');
-
-  endVideo();
-};
-
-const handleVolumeChange = () => {
-  if (!state.isPlayingOnClick) return;
-  console.log('handleVolumeChange');
-
-  state.isMutedByUser = videoRef.value.muted ? true : false
-};
-
 const handleClick = () => {
   if (!videoRef.value) return;
   console.log('handleClick');
@@ -79,24 +53,16 @@ const handleClick = () => {
   if (state.isPlayingOnClick && !videoRef.value.paused) {
     pauseVideo();
   } else {
-    playVideo();
+    state.isPlayingOnHover = false;
+    playVideo();    
   }
 };
 
-const handleMouseEnter = () => {
-  if (!videoRef.value) return;
-  if (state.isPlayingOnClick) return;
-  console.log('handleMouseEnter');
+const handleVolumeChange = () => {
+  if (!state.isPlayingOnClick) return;
+  console.log('handleVolumeChange');
 
-  mouseEnterVideo();
-};
-
-const handleMouseLeave = () => {
-  if (!videoRef.value) return;
-  if (state.isPlayingOnClick) return;  
-  console.log('handleMouseLeave');
-
-  mouseLiveVideo();
+  state.isMutedByUser = videoRef.value.muted ? true : false
 };
 
 const handleSeeking = () => {
@@ -108,9 +74,9 @@ const handleSeeked = () => {
 }
 
 useVideoEvents(videoRef, {
-  play: handlePlay,
-  pause: handlePause,
-  ended: handleEnd,
+  play: playVideo,
+  pause: pauseVideo,
+  ended: endVideo,
   volumechange: handleVolumeChange,
   seeking: handleSeeking,
   seeked: handleSeeked
@@ -124,8 +90,8 @@ useVideoEvents(videoRef, {
 <template>
   <section 
     class="video-player"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
+    @mouseenter="mouseEnterVideo"
+    @mouseleave="mouseLeaveVideo"
   >
     <figure class="video-wrapper" :style="aspectRatioStyle">
       <video 
