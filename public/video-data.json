@@ -16,6 +16,14 @@
       "poster": "https://files.vidstack.io/agent-327/poster.png",
       "posterAlt": "Preview image for demo clip",
       "aspectRatio": "9/16"
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "poster": "https://files.vidstack.io/sprite-fight/poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
     }
   ]
 }

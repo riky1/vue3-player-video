@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useVideoPlayer } from '../composables/useVideoPlayer';
 import { useVideoEvents } from '../composables/useVideoEvents';
 import { useButtonsHandler } from '../composables/useButtonsHandler';
+import { useVideoController } from '../composables/useVideoController';
 import { useAspectRatio } from '../composables/useAspectRatio';
 import { useMimeTypes } from '../composables/useMimeTypes';
 import '../assets/video-player.css';
@@ -30,6 +31,7 @@ const props = defineProps({
 const videoRef = ref(null);
 const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLeaveVideo } = useVideoPlayer(videoRef);
 const { btnState, handleButtons } = useButtonsHandler(videoRef, state);
+const { pauseOthersVideos } = useVideoController(videoRef, state);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const mimeType = useMimeTypes(props.src);
@@ -54,6 +56,8 @@ const handleClick = () => {
     pauseVideo();
   } else {
     state.isPlayingOnHover = false;
+
+    pauseOthersVideos();
     playVideo();    
   }
 };
