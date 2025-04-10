@@ -5,6 +5,7 @@ import { useVideoMap } from '../composables/useVideoMap';
 import { useVideoEvents } from '../composables/useVideoEvents';
 import { useButtonsHandler } from '../composables/useButtonsHandler';
 import { useVideoController } from '../composables/useVideoController';
+import { useAudioSettings } from '../composables/useAudioSettings';
 import { useAspectRatio } from '../composables/useAspectRatio';
 import { useMimeTypes } from '../composables/useMimeTypes';
 import '../assets/video-player.css';
@@ -35,6 +36,7 @@ const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLeaveVideo
 const { videos, videoId } = useVideoMap(videoRef, state);
 const { btnState, handleButtons } = useButtonsHandler(videoRef, state);
 const { pauseOthersVideos } = useVideoController(videos, videoId);
+const { syncVideoAudioState, updateAudioPreference } = useAudioSettings(videoRef, state);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const mimeType = useMimeTypes(props.src);
@@ -61,6 +63,7 @@ const handleClick = () => {
     state.isPlayingOnHover = false;
 
     pauseOthersVideos();
+    syncVideoAudioState();
     playVideo();    
   }
 };
@@ -69,7 +72,9 @@ const handleVolumeChange = () => {
   if (!state.isPlayingOnClick) return;
   console.log('handleVolumeChange');
 
-  state.isMutedByUser = videoRef.value.muted ? true : false
+  const muted = videoRef.value.muted;
+  const volume = videoRef.value.volume;
+  updateAudioPreference(muted, volume, videos);
 };
 
 const handleSeeking = () => {

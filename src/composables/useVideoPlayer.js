@@ -1,11 +1,13 @@
+// description: Composable per gestire la logica del video player in Vue 3
+
 import { reactive } from 'vue';
 
 export function useVideoPlayer(videoRef) {
   const state = reactive({
     isPlayingOnClick: false,
     isPlayingOnHover: false,
-    isMutedByUser: false,
-    isFirstClick: true
+    isFirstClick: true,
+    isMuted: false
   });
 
   let loopInterval = null;  
@@ -29,8 +31,6 @@ export function useVideoPlayer(videoRef) {
     }
   
     clearInterval(loopInterval);
-  
-    setMute(state.isMutedByUser);
     
     videoRef.value.controls = true;
     state.isPlayingOnClick = true;
@@ -83,7 +83,7 @@ export function useVideoPlayer(videoRef) {
       videoRef.value.pause();
       videoRef.value.controls = true;
       resetVideo();
-      setMute(false);
+      setMute(state.isMuted);
     }, 4000 - videoRef.value.currentTime * 1000);
   }
 
