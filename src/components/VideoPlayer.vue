@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useVideoPlayer } from '../composables/useVideoPlayer';
+import { useVideoMap } from '../composables/useVideoMap';
 import { useVideoEvents } from '../composables/useVideoEvents';
 import { useButtonsHandler } from '../composables/useButtonsHandler';
 import { useVideoController } from '../composables/useVideoController';
@@ -29,9 +30,11 @@ const props = defineProps({
 });
 
 const videoRef = ref(null);
+
 const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLeaveVideo } = useVideoPlayer(videoRef);
+const { videos, videoId } = useVideoMap(videoRef, state);
 const { btnState, handleButtons } = useButtonsHandler(videoRef, state);
-const { pauseOthersVideos } = useVideoController(videoRef, state);
+const { pauseOthersVideos } = useVideoController(videos, videoId);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
 const mimeType = useMimeTypes(props.src);
