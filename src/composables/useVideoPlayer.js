@@ -23,6 +23,14 @@ export function useVideoPlayer(videoRef) {
     videoRef.value.muted = muted;
   };
 
+  const playVideoSafely = (video) => {
+    if (video.readyState >= 3) {
+      video.play();
+    } else {
+      video.addEventListener('canplay', () => video.play(), { once: true });
+    }
+  };
+
   const playVideo = () => {
     if (state.isPlayingOnHover) return;
 
@@ -36,7 +44,7 @@ export function useVideoPlayer(videoRef) {
     state.isPlayingOnClick = true;
     state.isPlayingOnHover = false;
 
-    videoRef.value.play();
+    playVideoSafely(videoRef.value);
   };
 
   const pauseVideo = () => {
@@ -57,7 +65,7 @@ export function useVideoPlayer(videoRef) {
     videoRef.value.controls = false;
     state.isPlayingOnHover = true;
 
-    videoRef.value.play();
+    playVideoSafely(videoRef.value);
     startLoop();
   }
 
@@ -72,7 +80,7 @@ export function useVideoPlayer(videoRef) {
 
     loopInterval = setInterval(() => {      
       resetVideo(false);
-      videoRef.value.play();
+      playVideoSafely(videoRef.value);
     }, 6000);
   }
 

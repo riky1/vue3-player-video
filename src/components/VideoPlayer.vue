@@ -110,7 +110,7 @@ useVideoEvents(videoRef, {
         ref="videoRef"
         class="video" 
         controls 
-        preload="auto" 
+        preload="metadata" 
         playsinline
         :poster="poster" 
         :aria-label="description"
