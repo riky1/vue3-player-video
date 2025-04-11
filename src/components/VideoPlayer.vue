@@ -109,10 +109,8 @@ useVideoEvents(videoRef, {
       <video 
         ref="videoRef"
         class="video" 
-        controls 
         preload="metadata" 
         playsinline
-        :poster="poster" 
         :aria-label="description"
         @click.prevent="handleClick"
       >
@@ -121,6 +119,13 @@ useVideoEvents(videoRef, {
           Your browser doesn't support this video. Consider updating to a new version.
         </p>
       </video>
+
+      <img  
+        :src="poster" 
+        :class="['poster', { show: state.showPoster }]"
+        :alt="description"
+        @click.prevent="handleClick"
+      />
 
       <button 
         :class="['play-button play',
@@ -174,6 +179,26 @@ figure {
   object-fit: cover;
 }
 
+// Poster
+
+.poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease-in-out;
+
+  &.show {
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.7s ease-in-out;
+  }
+}
+
 // Play Button
 
 .play-button {
@@ -195,6 +220,7 @@ figure {
   opacity: 0;
   transition: opacity 0.3s ease, transform 0.3s ease;
   transform-origin: center;
+  z-index: 2;
 
   &.show {
     opacity: 1;      

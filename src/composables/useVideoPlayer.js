@@ -7,7 +7,8 @@ export function useVideoPlayer(videoRef) {
     isPlayingOnClick: false,
     isPlayingOnHover: false,
     isFirstClick: true,
-    isMuted: false
+    isMuted: false,
+    showPoster: true
   });
 
   let loopInterval = null;  
@@ -22,6 +23,13 @@ export function useVideoPlayer(videoRef) {
   const setMute = (muted) => {
     videoRef.value.muted = muted;
   };
+
+  // video.readyState ritorna un numero da 0 a 4 che indica lo stato del video:
+  // 0 (HAVE_NOTHING)	Il video non ha ancora caricato nulla.
+  // 1 (HAVE_METADATA)	I metadati (dimensioni, durata ecc.) sono disponibili.
+  // 2 (HAVE_CURRENT_DATA)	È disponibile almeno un frame del video.
+  // 3 (HAVE_FUTURE_DATA)	Il video può essere riprodotto, ma potrebbe interrompersi.
+  // 4 (HAVE_ENOUGH_DATA)	Il video può essere riprodotto fino alla fine senza interruzioni.
 
   const playVideoSafely = (video) => {
     if (video.readyState >= 3) {
@@ -43,6 +51,7 @@ export function useVideoPlayer(videoRef) {
     videoRef.value.controls = true;
     state.isPlayingOnClick = true;
     state.isPlayingOnHover = false;
+    state.showPoster = false;
 
     playVideoSafely(videoRef.value);
   };
@@ -52,10 +61,11 @@ export function useVideoPlayer(videoRef) {
   };
 
   const endVideo = () => {
-    resetVideo();
-
     state.isPlayingOnClick = false;
     state.isFirstClick = true;
+    state.showPoster = true;
+
+    resetVideo();
   };
 
   const mouseEnterVideo = () => {
@@ -77,10 +87,11 @@ export function useVideoPlayer(videoRef) {
 
   const startLoop = () => {
     clearInterval(loopInterval);
+    state.showPoster = false;
 
     loopInterval = setInterval(() => {      
       resetVideo(false);
-      playVideoSafely(videoRef.value);
+      videoRef.value.play();
     }, 6000);
   }
 
@@ -89,7 +100,8 @@ export function useVideoPlayer(videoRef) {
       clearInterval(loopInterval);
   
       videoRef.value.pause();
-      videoRef.value.controls = true;
+      videoRef.value.controls = false;
+      state.showPoster = true;
       resetVideo();
       setMute(state.isMuted);
     }, 4000 - videoRef.value.currentTime * 1000);
