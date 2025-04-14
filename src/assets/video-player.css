@@ -1,5 +1,9 @@
 :root {
   --play-button-bg: rgba(0, 0, 0, 0.7);
-  --play-button-arrow: white;
+  --play-button-color: white;
   --play-button-bg-hover: rgba(0, 0, 0, 0.9);
+
+  --subtitles-color: white;
+  --subtitles-bg: rgba(0, 0, 0, 0.7);
+  --subtitles-opacity: 0.5;
 }

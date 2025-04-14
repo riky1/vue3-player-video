@@ -28,6 +28,9 @@ const props = defineProps({
     default: '16/9',
     validator: (value) => ['16/9', '9/16', '4/3', '1/1'].includes(value)
   },
+  subtitles: {
+    type: Array
+  },
 });
 
 const videoRef = ref(null);
@@ -115,6 +118,18 @@ useVideoEvents(videoRef, {
         @click.prevent="handleClick"
       >
         <source v-for="src in sources" :key="src" :src="src" :type="mimeType" />
+        
+        <template v-if="subtitles">
+          <track v-for="subtitle in subtitles" 
+            kind="subtitles"
+            class="subtitles"
+            :key="subtitle.src" 
+            :src="subtitle.src" 
+            :srclang="subtitle.lang" 
+            :label="subtitle.label" 
+          />
+        </template>
+
         <p>
           Your browser doesn't support this video. Consider updating to a new version.
         </p>
@@ -179,6 +194,14 @@ figure {
   object-fit: cover;
 }
 
+// Subtitles
+
+::cue {
+  color: var(--subtitles-color);
+  background-color: var(--subtitles-bg);
+  opacity: var(--subtitles-opacity);
+}
+
 // Poster
 
 .poster {
@@ -237,7 +260,7 @@ figure {
       width: 0;
       height: 0;
       margin-left: 2px;
-      border-left: 18px solid var(--play-button-arrow);
+      border-left: 18px solid var(--play-button-color);
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
     }
@@ -257,7 +280,7 @@ figure {
       content: "";
       width: 8px;
       height: 100%;
-      background-color: var(--play-button-arrow);
+      background-color: var(--play-button-color);
       border-radius: 2px;
     }
   }

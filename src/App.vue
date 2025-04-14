@@ -25,6 +25,7 @@ onMounted(() => {
           :poster="video.poster" 
           :description="video.posterAlt" 
           :aspectRatio="video.aspectRatio"
+          :subtitles="video.subtitles"
         />
       </div>
     </template>

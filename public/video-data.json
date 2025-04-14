@@ -19,11 +19,24 @@
     },
     {
       "sources": [
-        "https://files.vidstack.io/sprite-fight/720p.mp4"
+        "https://iandevlin.github.io/mdn/video-player-with-captions/video/sintel-short.mp4"
       ],
       "poster": "https://files.vidstack.io/sprite-fight/poster.webp",
       "posterAlt": "Preview image for demo clip",
-      "aspectRatio": "9/16"
+      "aspectRatio": "9/16",
+      "subtitles": [
+        {
+          "src": "/sintel-en.vtt",
+          "lang": "en",
+          "label": "English",
+          "default": true
+        },
+        {
+          "src": "/sintel-es.vtt",
+          "lang": "es",
+          "label": "Spanish"
+        }
+      ]
     }
   ]
 }
