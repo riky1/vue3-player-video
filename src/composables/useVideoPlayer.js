@@ -89,22 +89,26 @@ export function useVideoPlayer(videoRef) {
     clearInterval(loopInterval);
     state.showPoster = false;
 
-    loopInterval = setInterval(() => {      
+    loopInterval = setInterval(() => {    
+      if (!state.isPlayingOnHover) return;
       resetVideo(false);
       videoRef.value.play();
     }, 6000);
   }
 
   const stopLoop = () => {
+    const delay = Math.max(0, 4000 - videoRef.value.currentTime * 1000);
+  
     setTimeout(() => {
       clearInterval(loopInterval);
+      if (!state.isPlayingOnHover || state.isPlayingOnClick) return;
   
       videoRef.value.pause();
       videoRef.value.controls = false;
       state.showPoster = true;
       resetVideo();
       setMute(state.isMuted);
-    }, 4000 - videoRef.value.currentTime * 1000);
+    }, delay);
   }
 
   return {
