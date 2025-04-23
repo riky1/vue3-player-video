@@ -1,0 +1,9 @@
+{
+  "controls": true,
+  "autoplay": false,
+  "loop": false,
+  "muted": false,
+  "allowFullscreen": true,
+  "disablePictureInPicture": false,
+  "allowPreview": true
+}

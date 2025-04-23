@@ -1,15 +1,33 @@
 <script setup>
-import { onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useFetchData } from './composables/useFetchData';
 import VideoPlayer from './components/VideoPlayer.vue';
 
-const { config, loading, error, loadConfig } = useFetchData();
+const { jsonData, loading, error, loadConfig } = useFetchData();
+
+const videosData = ref([]);
+const globalOptions = ref({});
 
 onMounted(() => {
   loadConfig();
 });
 
-// console.log('data: ', data);
+watch(jsonData, (newValue) => {
+  if (newValue && Object.keys(newValue).length > 0) {
+    // Accede ai dati specifici
+    const videoData = newValue['video-data.json']?.videos || [];
+    const options = newValue['video-global-options.json'] || {};
+
+    // Assegna i valori alle costanti
+    videosData.value = videoData;
+    globalOptions.value = options;
+
+    console.log('videosData:', videosData.value);
+    console.log('globalOptions:', globalOptions.value);
+  }
+});
+
+console.log('jsonData: ', jsonData);
 // console.log('jsonFile: ', jsonFile);
 // console.log('lang: ', lang);
 </script>
@@ -19,13 +37,15 @@ onMounted(() => {
     <div v-if="loading">Loading…</div>
     <div v-else-if="error">Error: {{ error.message }}</div>
     <template v-else>
-      <div v-for="(video, index) in config.videos" :key="index" class="video-wrapper">
+      <div v-for="(video, index) in videosData" :key="index" class="video-wrapper">
         <VideoPlayer 
           :sources="video.sources"
           :poster="video.poster" 
           :description="video.posterAlt" 
           :aspectRatio="video.aspectRatio"
           :subtitles="video.subtitles"
+          :options="video.options"
+          :globalOptions="globalOptions"
         />
       </div>
     </template>

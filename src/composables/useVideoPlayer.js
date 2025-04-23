@@ -2,7 +2,7 @@
 
 import { reactive } from 'vue';
 
-export function useVideoPlayer(videoRef) {
+export function useVideoPlayer(videoRef, options = {}) {
   const state = reactive({
     isPlayingOnClick: false,
     isPlayingOnHover: false,
@@ -48,7 +48,13 @@ export function useVideoPlayer(videoRef) {
   
     clearInterval(loopInterval);
     
-    videoRef.value.controls = true;
+    // options
+    if (options.controls) {
+      videoRef.value.controls = true;
+    } else {
+      videoRef.value.controls = false;
+    }
+
     state.isPlayingOnClick = true;
     state.isPlayingOnHover = false;
     state.showPoster = false;
@@ -70,6 +76,11 @@ export function useVideoPlayer(videoRef) {
 
   const mouseEnterVideo = () => {
     if (!videoRef.value || state.isPlayingOnClick) return;
+
+    // options
+    if (!options.allowPreview) {
+      return
+    }
     
     setMute(true);
     videoRef.value.controls = false;
@@ -89,8 +100,10 @@ export function useVideoPlayer(videoRef) {
     clearInterval(loopInterval);
     state.showPoster = false;
 
-    loopInterval = setInterval(() => {    
+    loopInterval = setInterval(() => {  
+      // fix: on first click -> video starts, then stopsand shows poster
       if (!state.isPlayingOnHover) return;
+
       resetVideo(false);
       videoRef.value.play();
     }, 6000);
@@ -101,6 +114,8 @@ export function useVideoPlayer(videoRef) {
   
     setTimeout(() => {
       clearInterval(loopInterval);
+
+      // fix: on first click -> video starts, then stopsand shows poster
       if (!state.isPlayingOnHover || state.isPlayingOnClick) return;
   
       videoRef.value.pause();

@@ -1,0 +1,51 @@
+{
+  "videos": [
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/agent-327/720p.mp4", 
+        "https://files.vidstack.io/agent-327/720p.ogg"
+      ],
+      "poster": "/videos/agent-327-poster.png",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16",
+      "options": {
+        "controls": true,
+        "autoplay": false,
+        "loop": true,
+        "muted": true,
+        "allowFullscreen": false,
+        "disablePictureInPicture": true,
+        "allowPreview": true
+      }
+    },
+    {
+      "sources": [
+        "https://iandevlin.github.io/mdn/video-player-with-captions/video/sintel-short.mp4"
+      ],
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16",
+      "subtitles": [
+        {
+          "src": "/sintel-en.vtt",
+          "lang": "en",
+          "label": "English",
+          "default": true
+        },
+        {
+          "src": "/sintel-es.vtt",
+          "lang": "es",
+          "label": "Spanish"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 :root {
-  --play-button-bg: rgba(0, 0, 0, 0.7);
-  --play-button-color: white;
-  --play-button-bg-hover: rgba(0, 0, 0, 0.9);
+  --vp-play-button-bg: rgba(0, 0, 0, 0.7);
+  --vp-play-button-color: white;
+  --vp-play-button-bg-hover: rgba(0, 0, 0, 0.9);
 
-  --subtitles-color: white;
-  --subtitles-bg: rgba(0, 0, 0, 0.7);
-  --subtitles-opacity: 0.5;
+  --vp-subtitles-color: white;
+  --vp-subtitles-bg: rgba(0, 0, 0, 0.7);
+  --vp-subtitles-opacity: 0.7;
 }

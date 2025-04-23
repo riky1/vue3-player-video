@@ -6,8 +6,10 @@ import { useVideoEvents } from '../composables/useVideoEvents';
 import { useButtonsHandler } from '../composables/useButtonsHandler';
 import { useVideoController } from '../composables/useVideoController';
 import { useAudioSettings } from '../composables/useAudioSettings';
+import { useOptions } from '../composables/useOptions';
 import { useAspectRatio } from '../composables/useAspectRatio';
 import { useMimeTypes } from '../composables/useMimeTypes';
+
 import '../assets/video-player.css';
 
 const props = defineProps({
@@ -31,11 +33,20 @@ const props = defineProps({
   subtitles: {
     type: Array
   },
+  options: {
+    type: Object,
+    default: () => ({})
+  },
+  globalOptions: {
+    type: Object,
+    default: () => ({})
+  }
 });
 
 const videoRef = ref(null);
 
-const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLeaveVideo } = useVideoPlayer(videoRef);
+const options = useOptions(props.globalOptions, props.options)
+const { state, playVideo, pauseVideo, endVideo, mouseEnterVideo, mouseLeaveVideo } = useVideoPlayer(videoRef, options.value);
 const { videos, videoId } = useVideoMap(videoRef, state);
 const { btnState, handleButtons } = useButtonsHandler(videoRef, state);
 const { pauseOthersVideos } = useVideoController(videos, videoId);
@@ -116,6 +127,9 @@ useVideoEvents(videoRef, {
         playsinline
         :aria-label="description"
         @click.prevent="handleClick"
+        :loop="options.loop"
+        :autoplay="options.autoplay"
+        :disablePictureInPicture="options.disablePictureInPicture"
       >
         <source v-for="src in sources" :key="src" :src="src" :type="mimeType" />
         
@@ -197,9 +211,9 @@ figure {
 // Subtitles
 
 ::cue {
-  color: var(--subtitles-color);
-  background-color: var(--subtitles-bg);
-  opacity: var(--subtitles-opacity);
+  color: var(--vp-subtitles-color);
+  background-color: var(--vp-subtitles-bg);
+  opacity: var(--vp-subtitles-opacity);
 }
 
 // Poster
@@ -231,7 +245,7 @@ figure {
   align-items: center;  
   width: 60px;
   height: 60px;
-  background: var(--play-button-bg);
+  background: var(--vp-play-button-bg);
   border: none;
   border-radius: 50%;
   top: 50%;
@@ -260,7 +274,7 @@ figure {
       width: 0;
       height: 0;
       margin-left: 2px;
-      border-left: 18px solid var(--play-button-color);
+      border-left: 18px solid var(--vp-play-button-color);
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
     }
@@ -280,7 +294,7 @@ figure {
       content: "";
       width: 8px;
       height: 100%;
-      background-color: var(--play-button-color);
+      background-color: var(--vp-play-button-color);
       border-radius: 2px;
     }
   }
@@ -289,7 +303,7 @@ figure {
 .video-player {
   &:hover {
     .play-button {
-      background: var(--play-button-bg-hover);
+      background: var(--vp-play-button-bg-hover);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
   }

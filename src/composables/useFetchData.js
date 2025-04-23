@@ -1,17 +1,27 @@
 import { ref } from 'vue';
 
 export function useFetchData() {
-  const config = ref(null);
+  const jsonData = ref({});
   const error = ref(null);
   const loading = ref(true);
 
   const loadConfig = async () => {
     try {
-      const jsonFile = document.getElementById('videoApp')?.getAttribute('json-file') || '/';
-      const res = await fetch(jsonFile);
-      if (!res.ok) throw new Error('Errore nel caricamento del JSON');
+      // Ottieni il percorso base e i nomi dei file JSON dal DOM
+      const jsonPath = document.getElementById('videoApp')?.getAttribute('json-path') || '/';
+      const jsonFiles = JSON.parse(document.getElementById('videoApp')?.getAttribute('json-files') || '[]');
 
-      config.value = await res.json();
+      // Ciclo su ogni file JSON per caricarlo
+      const data = {};
+      for (const file of jsonFiles) {
+        const res = await fetch(jsonPath + file);
+        if (!res.ok) throw new Error(`Errore nel caricamento del JSON: ${file}`);
+        data[file] = await res.json();
+      }
+
+      // Memorizza tutti i dati caricati
+      jsonData.value = data;
+
     } catch (err) {
       error.value = err;
     } finally {
@@ -20,7 +30,7 @@ export function useFetchData() {
   };
 
   return {
-    config,
+    jsonData,
     error,
     loading,
     loadConfig
