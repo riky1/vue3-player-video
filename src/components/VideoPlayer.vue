@@ -149,6 +149,11 @@ useVideoEvents(videoRef, {
         </p>
       </video>
 
+      <div v-if="state.showOverlay" 
+        class="overlay"
+        @click.prevent="handleClick"
+      ></div>
+
       <img  
         :src="poster" 
         :class="['poster', { show: state.showPoster }]"
@@ -236,6 +241,18 @@ figure {
   }
 }
 
+// Overlay
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--vp-overlay-bg);
+  z-index: 1;
+}
+
 // Play Button
 
 .play-button {
@@ -243,10 +260,10 @@ figure {
   display: flex;
   justify-content: center;
   align-items: center;  
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   background: var(--vp-play-button-bg);
-  border: none;
+  border: var(--vp-play-button-border);
   border-radius: 50%;
   top: 50%;
   left: 50%;
@@ -273,10 +290,10 @@ figure {
       display: block;
       width: 0;
       height: 0;
-      margin-left: 2px;
-      border-left: 18px solid var(--vp-play-button-color);
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
+      margin-left: 6px;
+      border-left: 22px solid var(--vp-play-button-color);
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
     }
   }
 

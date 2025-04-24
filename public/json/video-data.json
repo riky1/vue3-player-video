@@ -19,7 +19,7 @@
       "options": {
         "controls": true,
         "autoplay": false,
-        "loop": true,
+        "loop": false,
         "muted": true,
         "allowFullscreen": false,
         "disablePictureInPicture": true,

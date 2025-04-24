@@ -8,7 +8,8 @@ export function useVideoPlayer(videoRef, options = {}) {
     isPlayingOnHover: false,
     isFirstClick: true,
     isMuted: false,
-    showPoster: true
+    showPoster: true,
+    showOverlay: options.overlay || false
   });
 
   let loopInterval = null;  
@@ -58,6 +59,7 @@ export function useVideoPlayer(videoRef, options = {}) {
     state.isPlayingOnClick = true;
     state.isPlayingOnHover = false;
     state.showPoster = false;
+    state.showOverlay = false;
 
     playVideoSafely(videoRef.value);
   };
@@ -70,6 +72,10 @@ export function useVideoPlayer(videoRef, options = {}) {
     state.isPlayingOnClick = false;
     state.isFirstClick = true;
     state.showPoster = true;
+
+    if (options.overlay) {
+      state.showOverlay = true;
+    }
 
     resetVideo();
   };
