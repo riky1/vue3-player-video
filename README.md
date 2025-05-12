@@ -103,7 +103,7 @@ In HTML file, define where to load JSON data:
 
 ### 📹 `VideoPlayer.vue` Props
 
-```json
+```javascript
 props: {
   sources: Array,         // array of { src, type }
   poster: String,         // poster image
