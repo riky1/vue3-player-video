@@ -6,7 +6,10 @@
       ],
       "poster": "/videos/sprite-fight-poster.webp",
       "posterAlt": "Preview image for demo clip",
-      "aspectRatio": "9/16"
+      "aspectRatio": "9/16",
+      "options": {
+        "overlay": true
+      }
     },
     {
       "sources": [
@@ -46,6 +49,14 @@
           "label": "Spanish"
         }
       ]
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
     }
   ]
 }

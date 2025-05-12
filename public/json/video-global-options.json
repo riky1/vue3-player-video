@@ -6,5 +6,5 @@
   "allowFullscreen": true,
   "disablePictureInPicture": false,
   "allowPreview": true,
-  "overlay": true
+  "overlay": false
 }
