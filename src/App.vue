@@ -126,6 +126,7 @@ console.log('jsonData: ', jsonData);
             <VideoPlayer 
               :sources="video.sources"
               :poster="video.poster" 
+              :title="video.title"
               :description="video.posterAlt" 
               :aspectRatio="video.aspectRatio"
               :subtitles="video.subtitles"

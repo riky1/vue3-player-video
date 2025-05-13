@@ -18,8 +18,10 @@ const props = defineProps({
     required: true
   },
   poster: {
-    type: String,
-    required: true
+    type: String
+  },
+  title: {
+    type: String
   },
   description: {
     type: String,
@@ -180,6 +182,14 @@ useVideoEvents(videoRef, {
       >
         <div class="pause-icon"></div>
       </button>
+
+      <div v-if="state.showTitle" 
+        class="video-title"
+        @click.prevent="handleClick"
+      >
+        {{ title }}
+      </div>
+
     </figure>
   </section>
 </template>
@@ -215,6 +225,27 @@ figure {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+// Title
+
+.video-title {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+  color: var(--vp-title-color);
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
+  z-index: 1;
+
+  @media screen and (min-width: 640px) {
+    font-size: 20px;
+  }
 }
 
 // Subtitles
