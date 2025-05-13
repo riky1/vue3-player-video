@@ -22,9 +22,21 @@ onMounted(() => {
 
     if (swiperEl) {
       const params = {
+        slidesPerView: 1,
+        breakpoints: {
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 0,
+          },
+          910: {
+            slidesPerView: 3,
+            spaceBetween: 0,
+          },
+        },
         injectStyles: [
           `
             .swiper {
+              background-color: #f0f0f0;
               width: calc(100% - 40px);
               padding: 0 20px;
             }
@@ -32,14 +44,16 @@ onMounted(() => {
             .swiper-button-next,
             .swiper-button-prev {
               height: 24px;
+              color: #295eb9;
+              stroke: #295eb9;
             }
 
             .swiper-button-prev {
-              left: 0;
+              left: 5px;
             }
 
             .swiper-button-next {
-              right: 0;
+              right: 5px;
             }
 
             .swiper-pagination-bullet{
@@ -64,6 +78,7 @@ onMounted(() => {
       isVisible.value = true;
     }
   }, 1000);
+
 });
 
 watch(jsonData, (newValue) => {
@@ -90,13 +105,12 @@ console.log('jsonData: ', jsonData);
   <main>
     <div v-if="loading">Loading…</div>
     <div v-else-if="error">Error: {{ error.message }}</div>
+
     <template v-else>
       <swiper-container
         ref="swiperRef"
         class="swiper-container"
         init="false"
-        :slidesPerView="3"
-        :spaceBetween="0"
         :navigation="true"
         :pagination="{
           clickable: true,
@@ -108,7 +122,7 @@ console.log('jsonData: ', jsonData);
         <swiper-slide
           v-for="(video, index) in videosData" :key="index" 
         >
-          <div class="video-wrapper">
+          <div class="video-slide-wrapper">
             <VideoPlayer 
               :sources="video.sources"
               :poster="video.poster" 
@@ -126,26 +140,12 @@ console.log('jsonData: ', jsonData);
 </template>
 
 <style lang="scss" scoped>
-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;  
-  width: 100%;
-}
 
-.swiper-container {
-  width: 100%;
-  height: 100%;
-}
-
-.video-wrapper {
-  border-radius: 16px;
-  overflow: hidden;
+.video-slide-wrapper {
   transition: transform 0.3s ease-in-out;
   transform-origin: center;
-  margin: 40px 20px 50px;
-  margin-bottom: 50px;
-  margin-top: 40px;
+  margin: 40px auto 50px;
+  padding: 0 20px;
 
   &:hover {
     transform: scale(1.1);

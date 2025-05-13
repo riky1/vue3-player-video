@@ -119,7 +119,7 @@ useVideoEvents(videoRef, {
     @mouseenter="mouseEnterVideo"
     @mouseleave="mouseLeaveVideo"
   >
-    <figure class="video-wrapper" :style="aspectRatioStyle">
+    <figure class="video-wrapper" :style="{ aspectRatio: aspectRatio }">
       <video 
         ref="videoRef"
         class="video" 
@@ -195,13 +195,17 @@ figure {
 
 .video-player {
   position: relative;
-  width: 100%;
+  width: 100%;  
   cursor: pointer;
 }
 
 .video-wrapper {
   position: relative;
-  width: 100%;
+  width: auto;
+  max-height: 80vh;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .video {
