@@ -36,7 +36,6 @@ onMounted(() => {
         injectStyles: [
           `
             .swiper {
-              background-color: #f0f0f0;
               width: calc(100% - 40px);
               padding: 0 20px;
             }
