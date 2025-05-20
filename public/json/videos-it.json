@@ -49,6 +49,33 @@
       "poster": "/videos/sprite-fight-poster.webp",
       "posterAlt": "Preview image for demo clip",
       "aspectRatio": "9/16"
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "title": "Titolo del video Sprite Fight 720p",
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "title": "Titolo del video Sprite Fight 720p",
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "title": "Titolo del video Sprite Fight 720p",
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
     }
   ]
 }
