@@ -33,7 +33,8 @@ const props = defineProps({
     validator: (value) => ['16/9', '9/16', '4/3', '1/1'].includes(value)
   },
   subtitles: {
-    type: Array
+    type: Array,
+    default: () => []
   },
   options: {
     type: Object,
@@ -55,7 +56,6 @@ const { pauseOthersVideos } = useVideoController(videos, videoId);
 const { syncVideoAudioState, updateAudioPreference } = useAudioSettings(videoRef, state);
 
 const aspectRatioStyle = useAspectRatio(props.aspectRatio);
-const mimeType = useMimeTypes(props.src);
 
 // Handler functions
 
@@ -133,7 +133,7 @@ useVideoEvents(videoRef, {
         :autoplay="options.autoplay"
         :disablePictureInPicture="options.disablePictureInPicture"
       >
-        <source v-for="src in sources" :key="src" :src="src" :type="mimeType" />
+        <source v-for="src in sources" :key="src" :src="src" :type="useMimeTypes(src)" />
         
         <template v-if="subtitles">
           <track v-for="subtitle in subtitles" 
@@ -154,6 +154,8 @@ useVideoEvents(videoRef, {
       <div v-if="state.showOverlay" 
         class="overlay"
         @click.prevent="handleClick"
+        tabindex="-1"
+        aria-hidden="true"
       ></div>
 
       <img  
@@ -161,6 +163,8 @@ useVideoEvents(videoRef, {
         :class="['poster', { show: state.showPoster }]"
         :alt="description"
         @click.prevent="handleClick"
+        tabindex="-1"
+        aria-hidden="true"
       />
 
       <button 
@@ -168,7 +172,7 @@ useVideoEvents(videoRef, {
           { show: btnState.showPlayButton },
           { animate: btnState.animatePlayButton }
         ]" 
-        aria-label="Play button"
+        aria-label="Play"
         @click.prevent="handleClick"
       ></button>
 
@@ -177,18 +181,19 @@ useVideoEvents(videoRef, {
           { show: btnState.showPauseButton },
           { animate: btnState.animatePauseButton }
         ]" 
-        aria-label="Play button"
+        aria-label="Pause"
         @click.prevent="handleClick"
       >
         <div class="pause-icon"></div>
       </button>
 
-      <div v-if="state.showTitle" 
+      <figcaption v-if="state.showTitle" 
         class="video-title"
         @click.prevent="handleClick"
+        tabindex="-1"
       >
         {{ title }}
-      </div>
+      </figcaption>
 
     </figure>
   </section>

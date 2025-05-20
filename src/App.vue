@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Navigation, Pagination, Keyboard, A11y } from 'swiper/modules';
+import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 import { useFetchData } from './composables/useFetchData';
 import VideoPlayer from './components/VideoPlayer.vue';
 
@@ -10,7 +10,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const { jsonData, loading, error, loadConfig } = useFetchData();
-const swiperModules = [Navigation, Pagination, Keyboard, A11y];
+const swiperModules = [Navigation, Pagination, Keyboard];
 
 const isVisible = ref(false);
 const videosData = ref([]);
@@ -70,7 +70,6 @@ console.log('jsonData: ', jsonData);
         navigation
         :pagination="{ clickable: true }"
         keyboard
-        A11y
       >
         <SwiperSlide v-for="(video, index) in videosData" :key="index">
           <div class="video-slide-wrapper">
