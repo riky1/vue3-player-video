@@ -183,6 +183,7 @@ useVideoEvents(videoRef, {
         ]" 
         aria-label="Pause"
         @click.prevent="handleClick"
+        tabindex="-1"
       >
         <div class="pause-icon"></div>
       </button>
