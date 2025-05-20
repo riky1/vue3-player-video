@@ -4,44 +4,29 @@
       "sources": [
         "https://files.vidstack.io/sprite-fight/720p.mp4"
       ],
-      "title": null,
+      "title": "Titolo del video",
       "poster": "/videos/sprite-fight-poster.webp",
       "posterAlt": "Preview image for demo clip",
-      "aspectRatio": "9/16",
-      "options": {
-        "overlay": true
-      }
+      "aspectRatio": "9/16"
     },
     {
       "sources": [
         "https://files.vidstack.io/agent-327/720p.mp4", 
         "https://files.vidstack.io/agent-327/720p.ogg"
       ],
-      "title": "Assicuriamo a tutti parità di accesso all'elettricità e lavoriamo per consegnare energia",
+      "title": "Questo è un titolo più lungo per testare il layout su più righe",
       "poster": "/videos/agent-327-poster.png",
       "posterAlt": "Preview image for demo clip",
-      "aspectRatio": "9/16",
-      "options": {
-        "controls": true,
-        "autoplay": false,
-        "loop": false,
-        "muted": true,
-        "allowFullscreen": false,
-        "disablePictureInPicture": true,
-        "allowPreview": true
-      }
+      "aspectRatio": "9/16"
     },
     {
       "sources": [
         "https://iandevlin.github.io/mdn/video-player-with-captions/video/sintel-short.mp4"
       ],
-      "title": "Sintel short film",
+      "title": "Titolo de film Sintel short",
       "poster": "/videos/sprite-fight-poster.webp",
       "posterAlt": "Preview image for demo clip",
       "aspectRatio": "9/16",
-      "options": {
-        "overlay": true
-      },
       "subtitles": [
         {
           "src": "/sintel-en.vtt",
@@ -60,13 +45,10 @@
       "sources": [
         "https://files.vidstack.io/sprite-fight/720p.mp4"
       ],
-      "title": "Sprite Fight 720p",
+      "title": "Titolo del video Sprite Fight 720p",
       "poster": "/videos/sprite-fight-poster.webp",
       "posterAlt": "Preview image for demo clip",
-      "aspectRatio": "9/16",
-      "options": {
-        "overlay": true
-      }
+      "aspectRatio": "9/16"
     }
   ]
 }
