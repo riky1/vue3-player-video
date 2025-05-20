@@ -38,7 +38,10 @@ onMounted(() => {
 watch(jsonData, (newValue) => {
   if (newValue && Object.keys(newValue).length > 0) {
     // Accede ai dati specifici
-    const videoData = newValue['video-data.json']?.videos || [];
+    // const videoData = newValue['video-data.json']?.videos || [];
+    const videoFile = Object.keys(newValue).find(k => k.includes('video-') && k.endsWith('.json'));
+    const videoData = newValue[videoFile]?.videos || [];
+
     const options = newValue['video-global-options.json'] || {};
 
     // Assegna i valori alle costanti

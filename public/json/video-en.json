@@ -1,0 +1,54 @@
+{
+  "videos": [
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "title": "Video title",
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/agent-327/720p.mp4", 
+        "https://files.vidstack.io/agent-327/720p.ogg"
+      ],
+      "title": "Questo è un titolo più lungo per testare il layout su più righe",
+      "poster": "/videos/agent-327-poster.png",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
+    },
+    {
+      "sources": [
+        "https://iandevlin.github.io/mdn/video-player-with-captions/video/sintel-short.mp4"
+      ],
+      "title": "Titolo de film Sintel short",
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16",
+      "subtitles": [
+        {
+          "src": "/sintel-en.vtt",
+          "lang": "en",
+          "label": "English",
+          "default": true
+        },
+        {
+          "src": "/sintel-es.vtt",
+          "lang": "es",
+          "label": "Spanish"
+        }
+      ]
+    },
+    {
+      "sources": [
+        "https://files.vidstack.io/sprite-fight/720p.mp4"
+      ],
+      "title": "Titolo del video Sprite Fight 720p",
+      "poster": "/videos/sprite-fight-poster.webp",
+      "posterAlt": "Preview image for demo clip",
+      "aspectRatio": "9/16"
+    }
+  ]
+}
